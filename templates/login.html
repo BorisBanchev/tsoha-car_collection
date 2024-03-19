@@ -1,0 +1,50 @@
+{% extends "base.html"%} {% block content %}
+<br />
+<h1 style="text-align: center">Login to your account to view car collection</h1>
+<br />
+<br />
+<form action="/login" method="POST">
+  <div style="text-align: center">
+    <div class="login-form" style="display: inline-block">
+      <div class="mb-3">
+        <label
+          for="exampleInputEmail1"
+          class="form-label"
+          style="width: 400px; display: inline-block; text-align: left"
+          >Username</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputEmail1"
+          name="username"
+          placeholder="enter username:"
+          style="width: 400px"
+        />
+      </div>
+      <div class="mb-3">
+        <label
+          for="exampleInputPassword1"
+          class="form-label"
+          style="width: 400px; display: inline-block; text-align: left"
+          >Password</label
+        >
+        <input
+          type="password"
+          class="form-control"
+          id="exampleInputPassword1"
+          name="password"
+          placeholder="enter password:"
+          style="width: 400px"
+        />
+      </div>
+      <div class="sign-up-button">
+        <button type="submit" class="btn btn-secondary">Login</button>
+      </div>
+    </div>
+  </div>
+</form>
+<br />
+{% if message2 %}
+<div style="text-align: center">{{ message2 }}</div>
+{% endif %} {% endblock %}
