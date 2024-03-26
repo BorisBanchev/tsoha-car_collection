@@ -6,7 +6,7 @@ from flask import render_template, redirect, request, session
 from os import getenv
 from signup import check_user_exists, create_account
 from login import login_to_account
-from garages import create_garage_
+from garages import create_garage_, remove_garage_, open_garage
 from db import db
 
 app.secret_key = getenv("SECRET_KEY")
@@ -59,7 +59,7 @@ def profile():
     try:
         if session["username"]:
             sql1 = text("SELECT id from users WHERE username=:username")
-            sql2 = text("SELECT garages.id, garages.name, garages.capacity FROM users JOIN usergarages ON users.id = usergarages.user_id JOIN garages ON usergarages.garage_id = garages.id WHERE users.id=:user_id")
+            sql2 = text("select usergarages.id, garages.name, garages.capacity from users join usergarages on users.id = usergarages.user_id join garages on garages.id = usergarages.garage_id where users.id=:user_id")
             user_id = db.session.execute(sql1, {"username":session["username"]}).fetchone()[0]
             garages = db.session.execute(sql2, {"user_id":user_id}).fetchall()
             return render_template("profile.html", garages=garages)
@@ -82,11 +82,25 @@ def create_garage():
     except:
         return render_template("error.html", message = "You have to be logged in to create a garage!")
 
-@app.route("/add_car")
-def add_car_to_garage():
-    pass 
 
-@app.route("/remove_car")
-def remove_car_from_garage():
-    pass 
+@app.route("/remove_garage")
+def remove_garage():
+    garage_id = request.args.get("garage_id", type=int)
+    remove_garage_(garage_id)
+    return redirect("/profile")
+
+
+@app.route("/garage")
+def garage():
+    garage_id = request.args.get("garage_id", type=int)
+    data = open_garage(garage_id)
+    garage_name = data[0]
+    cars = data[1]
+    return render_template("garage.html", garage_name = garage_name, cars = cars)
+
+
+
+
+
+
 

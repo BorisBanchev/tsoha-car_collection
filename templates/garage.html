@@ -1,0 +1,27 @@
+{% extends "base.html"%} {% block content %}
+<br />
+<h1>Hello, {{session["username"]}} welcome to {{garage_name}}!</h1>
+<br />
+<br />
+<h3>Here are all the cars in the garage:</h3>
+<br />
+<table class="table table-striped table-hover" style="max-width: 600px">
+  <thead>
+    <tr>
+      <th scope="col">Brand</th>
+      <th scope="col">Model</th>
+      <th scope="col">Production Year</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for car in cars %}
+    <tr>
+      <td>{{car.brand}}</td>
+      <td>{{car.model}}</td>
+      <td>{{car.prod_year}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock%}

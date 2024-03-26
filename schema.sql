@@ -20,12 +20,15 @@ CREATE TABLE garages (
 
 CREATE TABLE cars (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+    brand VARCHAR(50) NOT NULL,
+    model VARCHAR(50) NOT NULL,
+    prod_year INTEGER NOT NULL
 );  
 
 CREATE TABLE garagecars (
     id SERIAL PRIMARY KEY,
-    garage_id INTEGER REFERENCES garages(id),
+    garage_id INTEGER,
+    FOREIGN KEY (garage_id) REFERENCES garages(id) ON DELETE CASCADE,
     car_id INTEGER REFERENCES cars(id)
 );  
 
@@ -38,5 +41,7 @@ CREATE TABLE usercars (
 CREATE TABLE usergarages (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
-    garage_id INTEGER REFERENCES garages(id)
+    garage_id INTEGER,
+    FOREIGN KEY (garage_id) REFERENCES garages(id) ON DELETE CASCADE
 );  
+
