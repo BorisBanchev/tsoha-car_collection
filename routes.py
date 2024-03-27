@@ -92,12 +92,15 @@ def remove_garage():
 
 @app.route("/garage")
 def garage():
-    garage_id = request.args.get("garage_id", type=int)
-    data = open_garage(garage_id)
-    garage_name = data[0]
-    cars = data[1]
-    return render_template("garage.html", garage_name = garage_name, cars = cars)
-
+    try:
+        if session["username"]:
+            garage_id = request.args.get("garage_id", type=int)
+            data = open_garage(garage_id)
+            garage_name = data[0]
+            cars = data[1]
+            return render_template("garage.html", garage_name = garage_name, cars = cars)
+    except:
+        return render_template("error.html", message = "You have to be logged in to view a garage!")
 
 
 
