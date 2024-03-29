@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% block content %}
+<br />
+<br />
+<h1>You can add a car to garage from below!</h1>
+<br />
+<br />
+<br />
+<div class="add-car-form" style="display: flex; justify-content: center">
+  <form action="/add_car" method="POST" style="width: 400px">
+    <div class="login-form">
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label">Car Brand</label>
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputEmail1"
+          name="carbrand"
+          placeholder="enter brand name:"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Car Model</label>
+        <input
+          type="text"
+          class="form-control"
+          id="exampleInputPassword1"
+          name="carmodel"
+          placeholder="enter model name:"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label"
+          >Production Year</label
+        >
+        <input
+          type="number"
+          class="form-control"
+          id="exampleInputPassword1"
+          name="production_year"
+          placeholder="enter production year:"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label"
+          >Garage to be added in</label
+        >
+        <select class="form-control" name="garage_id" required>
+          <option disabled selected value="">Select Garage</option>
+          {% for garage in garages %}
+          <option value="{{ garage.id }}">{{ garage.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="car-add-button" style="text-align: center">
+        <button type="submit" class="btn btn-primary">add car</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% if message %}
+<br />
+<div style="text-align: center">{{ message }}</div>
+{% endif %} {% endblock %}

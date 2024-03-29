@@ -6,7 +6,7 @@ from flask import render_template, redirect, request, session
 from os import getenv
 from signup import check_user_exists, create_account
 from login import login_to_account
-from garages import create_garage_, remove_garage_, open_garage
+from garages import create_garage_, remove_garage_, open_garage, add_car_
 from db import db
 
 app.secret_key = getenv("SECRET_KEY")
@@ -83,27 +83,41 @@ def create_garage():
         return render_template("error.html", message = "You have to be logged in to create a garage!")
 
 
-@app.route("/remove_garage")
-def remove_garage():
-    garage_id = request.args.get("garage_id", type=int)
+@app.route("/remove_garage/<int:garage_id>")
+def remove_garage(garage_id: int):
     remove_garage_(garage_id)
     return redirect("/profile")
 
 
-@app.route("/garage")
-def garage():
+@app.route("/garage/<int:garage_id>")
+def garage(garage_id: int):
     try:
         if session["username"]:
-            garage_id = request.args.get("garage_id", type=int)
             data = open_garage(garage_id)
-            garage_name = data[0]
-            cars = data[1]
-            return render_template("garage.html", garage_name = garage_name, cars = cars)
+            if data:
+                garage_name = data[0]
+                cars = data[1]
+                return render_template("garage.html", garage_name = garage_name, cars = cars)
     except:
-        return render_template("error.html", message = "You have to be logged in to view a garage!")
+        return render_template("error.html", message = "You have to be logged in to see garage!")
 
 
-
+@app.route("/add_car", methods = ["POST", "GET"])
+def add_car():
+    sql1 = text("SELECT id from users WHERE username=:username")
+    sql2 = text("select usergarages.id, garages.name, garages.capacity from users join usergarages on users.id = usergarages.user_id join garages on garages.id = usergarages.garage_id where users.id=:user_id")
+    user_id = db.session.execute(sql1, {"username":session["username"]}).fetchone()[0]
+    garages = db.session.execute(sql2, {"user_id":user_id}).fetchall()
+    if request.method == "GET":
+        return render_template("add_car.html", garages = garages)
+    
+    if request.method == "POST":
+        car_brand = request.form["carbrand"]
+        car_model = request.form["carmodel"]
+        prod_year = int(request.form["production_year"])
+        garage_id = int(request.form["garage_id"])
+        message = add_car_(car_brand, car_model, prod_year, garage_id)
+        return render_template("add_car.html", message = message, garages = garages)
 
 
 

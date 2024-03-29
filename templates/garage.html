@@ -11,6 +11,7 @@
       <th scope="col">Brand</th>
       <th scope="col">Model</th>
       <th scope="col">Production Year</th>
+      <th scope="col">Remove car</th>
     </tr>
   </thead>
   <tbody>
@@ -19,9 +20,15 @@
       <td>{{car.brand}}</td>
       <td>{{car.model}}</td>
       <td>{{car.prod_year}}</td>
+      <td class="buttons-column">
+          <div class="buttons-container">
+              <a href="#"><button type="button" class="btn btn-outline-danger">Remove</button></a>
+          </div>
+      </td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
-
+  </body>
+</div>
 {% endblock%}
