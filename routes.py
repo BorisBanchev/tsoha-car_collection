@@ -118,6 +118,6 @@ def add_car():
         garage_id = int(request.form["garage_id"])
         message = add_car_(car_brand, car_model, prod_year, garage_id)
         return render_template("add_car.html", message = message, garages = garages)
-
+    
 
 

@@ -29,13 +29,15 @@ CREATE TABLE garagecars (
     id SERIAL PRIMARY KEY,
     garage_id INTEGER,
     FOREIGN KEY (garage_id) REFERENCES garages(id) ON DELETE CASCADE,
-    car_id INTEGER REFERENCES cars(id)
+    car_id INTEGER, 
+    FOREIGN KEY (car_id) REFERENCES cars(id) ON DELETE CASCADE
 );  
 
 CREATE TABLE usercars (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
-    car_id INTEGER REFERENCES cars(id)
+    car_id INTEGER, 
+    FOREIGN KEY (car_id) REFERENCES cars(id) ON DELETE CASCADE
 );  
 
 CREATE TABLE usergarages (
