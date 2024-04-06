@@ -2,11 +2,11 @@
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
-from flask import render_template, redirect, request, session
+from flask import render_template, redirect, request, session, url_for
 from os import getenv
 from signup import check_user_exists, create_account
 from login import login_to_account
-from garages import create_garage_, remove_garage_, open_garage, add_car_
+from garages import create_garage_, remove_garage_, open_garage, add_car_, remove_car_
 from db import db
 
 app.secret_key = getenv("SECRET_KEY")
@@ -97,7 +97,7 @@ def garage(garage_id: int):
             if data:
                 garage_name = data[0]
                 cars = data[1]
-                return render_template("garage.html", garage_name = garage_name, cars = cars)
+                return render_template("garage.html", garage_name = garage_name, cars = cars, garage_id = garage_id)
     except:
         return render_template("error.html", message = "You have to be logged in to see garage!")
 
@@ -118,6 +118,11 @@ def add_car():
         garage_id = int(request.form["garage_id"])
         message = add_car_(car_brand, car_model, prod_year, garage_id)
         return render_template("add_car.html", message = message, garages = garages)
-    
 
+@app.route("/remove_car")
+def remove_car():
+    garage_id = request.args.get("garage_id")
+    car_id = request.args.get("car_id")
+    remove_car_(car_id)
+    return redirect(url_for("garage", garage_id = garage_id))
 

@@ -42,7 +42,7 @@ def remove_garage_(garage_id: int):
 
 def open_garage(garage_id: int):
     sql1 = text("SELECT garages.name from garages where id=:garage_id")
-    sql2 = text("SELECT cars.brand, cars.model, cars.prod_year from cars join garagecars on cars.id = garagecars.car_id join garages on garages.id = garagecars.garage_id where garagecars.garage_id=:garage_id")
+    sql2 = text("SELECT cars.id, cars.brand, cars.model, cars.prod_year from cars join garagecars on cars.id = garagecars.car_id join garages on garages.id = garagecars.garage_id where garagecars.garage_id=:garage_id")
     garage_name = db.session.execute(sql1, {"garage_id":garage_id}).fetchone()[0]
     cars = db.session.execute(sql2, {"garage_id":garage_id}).fetchall()
     return (garage_name, cars)
