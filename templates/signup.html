@@ -11,7 +11,7 @@
             <div class = "signup-form" style="display: inline-block;">
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label" style="width: 400px; display: inline-block; text-align: left;">Username</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" name="username" placeholder="enter username:" style="width: 400px;">
+                    <input type="text" class="form-control" id="exampleInputEmail1" name="username" placeholder="enter username:" {% if username and not success %} value="{{username}}" {% endif %} style="width: 400px;" >
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label" style="width: 400px; display: inline-block; text-align: left;">Password</label>

@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from flask import render_template, redirect, request, session, url_for
 from os import getenv
-from signup import check_user_exists, create_account
+from signup import create_account
 from login import login_to_account
 from garages import create_garage_, remove_garage_, open_garage, add_car_, remove_car_
 from db import db
@@ -18,17 +18,21 @@ def index():
 
 @app.route("/signup", methods = ["POST", "GET"])
 def signup():
-    
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
         password2 = request.form["password2"]
 
-        message = create_account(username, password, password2)
-        
-        return render_template("signup.html", message=message)
-        
+        data = create_account(username, password, password2)
+        empty_fields = data[0]
+        message = data[1]
+        success = data[2]
 
+        if len(empty_fields) != 0:
+                return render_template("signup.html", message = "username or password must be filled!", success = success, username = None)
+        
+        return render_template("signup.html", message = message, success = success, username = username)
+        
     if request.method == "GET":
         return render_template("signup.html")
 
