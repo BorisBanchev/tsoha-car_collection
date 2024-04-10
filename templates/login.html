@@ -19,7 +19,19 @@
           id="exampleInputEmail1"
           name="username"
           placeholder="enter username:"
+          {%
+          if
+          username
+          and
+          not
+          success
+          %}
+          value="{{username}}"
+          {%
+          endif
+          %}
           style="width: 400px"
+          required
         />
       </div>
       <div class="mb-3">
@@ -36,6 +48,7 @@
           name="password"
           placeholder="enter password:"
           style="width: 400px"
+          required
         />
       </div>
       <div class="sign-up-button">
@@ -45,6 +58,6 @@
   </div>
 </form>
 <br />
-{% if message2 %}
-<div style="text-align: center">{{ message2 }}</div>
+{% if message %}
+<div style="text-align: center">{{ message }}</div>
 {% endif %} {% endblock %}

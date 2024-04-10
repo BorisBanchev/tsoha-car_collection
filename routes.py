@@ -29,7 +29,7 @@ def signup():
         success = data[2]
 
         if len(empty_fields) != 0:
-                return render_template("signup.html", message = "username or password must be filled!", success = success, username = None)
+            return render_template("signup.html", message = "username or password must be filled!", success = success, username = None)
         
         return render_template("signup.html", message = message, success = success, username = username)
         
@@ -42,13 +42,19 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        message2 = login_to_account(username, password)
+        data = login_to_account(username, password)
+        empty_fields = data[0]
+        message = data[1]
+        success = data[2]
+        if len(empty_fields) != 0:
+            return render_template("login.html", message = "username or password must be filled!", success = success, username = None)
         
-        if message2 != None:
-            return render_template("login.html", message2 = message2)
+        elif success:
+            session["username"] = username
+            return redirect("/profile")
         
         else:
-            return redirect("/profile")
+            return render_template("login.html", message = message, success = success, username = username)
         
     if request.method == "GET":
        return  render_template("login.html")
