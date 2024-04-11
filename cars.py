@@ -11,15 +11,16 @@ def remove_car_(car_id: int):
     db.session.execute(sql, {"car_id":car_id})
     db.session.commit()
 
-def add_car_(brand: str, model: str, prod_year: int, garage_id ):
+def add_car_(brand: str, model: str, prod_year: int, garage_id: int ):
     sql_to_insert_to_cars = text("INSERT INTO cars (brand, model, prod_year) VALUES (:brand, :model, :prod_year) RETURNING id")
     sql_to_insert_to_garagecars = text("INSERT INTO garagecars (garage_id, car_id) VALUES (:garage_id, :car_id)")
     user_id = get_user_id()
-    car_id = db.session.execute(sql_to_insert_to_cars, {"brand":brand, "model":model, "prod_year":prod_year }).fetchone()[0]
+    if prod_year != "" and garage_id != "":
+        car_id = db.session.execute(sql_to_insert_to_cars, {"brand":brand, "model":model, "prod_year":prod_year }).fetchone()[0]
+        db.session.commit()
     sql_to_insert_to_usercars = text("INSERT INTO usercars (user_id, car_id) VALUES (:user_id, :car_id)")
     data = add_car_valid(brand, model, prod_year, garage_id)
     if data[2]:
-        db.session.commit()
         db.session.execute(sql_to_insert_to_garagecars,{"garage_id":garage_id,"car_id":car_id})
         db.session.commit()
         db.session.execute(sql_to_insert_to_usercars,{"user_id":user_id, "car_id":car_id})

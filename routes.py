@@ -6,7 +6,8 @@ from flask import render_template, redirect, request, session, url_for
 from os import getenv
 from signup import create_account
 from login import login_to_account
-from garages import create_garage_, remove_garage_, open_garage, add_car_, remove_car_
+from garages import create_garage_, remove_garage_, open_garage
+from cars import add_car_, remove_car_
 from db import db
 
 app.secret_key = getenv("SECRET_KEY")
@@ -124,10 +125,20 @@ def add_car():
     if request.method == "POST":
         car_brand = request.form["carbrand"]
         car_model = request.form["carmodel"]
-        prod_year = int(request.form["production_year"])
-        garage_id = int(request.form["garage_id"])
-        message = add_car_(car_brand, car_model, prod_year, garage_id)
-        return render_template("add_car.html", message = message, garages = garages)
+        prod_year = request.form["production_year"]
+        garage_id = request.form["garage_id"]
+        if prod_year != "" and garage_id != "":
+            data = add_car_(car_brand, car_model, int(prod_year), int(garage_id))
+            empty_fields = data[0]
+            message = data[1]
+            success = data[2]
+        else:
+            data = add_car_(car_brand, car_model, prod_year, garage_id)
+            empty_fields = data[0]
+            message = data[1]
+            success = data[2]
+            
+        return render_template("add_car.html", message = message, success = success, car_brand = car_brand, car_model = car_model, prod_year = prod_year, garages = garages)
 
 @app.route("/remove_car")
 def remove_car():
