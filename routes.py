@@ -1,5 +1,7 @@
 
 from app import app
+import secrets
+from werkzeug.exceptions import abort
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from flask import render_template, redirect, request, session, url_for
@@ -52,6 +54,7 @@ def login():
         
         elif success:
             session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/profile")
         
         else:
@@ -82,16 +85,28 @@ def create_garage():
     try:
         if session["username"]:
             if request.method == "POST":
+                if session["csrf_token"] != request.form["csrf_token"]:
+                    abort(403)
                 name = request.form["garage_name"]
-                capacity = int(request.form["capacity"])
-                message = create_garage_(name, capacity)
-                return render_template("create_garage.html", message=message)
+                capacity = request.form["capacity"]
+                if capacity != "":
+                    data = create_garage_(name, int(capacity))
+                    empty_fields = data[0]
+                    message = data[1]
+                    success = data[2]
+                else:
+                    data = create_garage_(name, capacity)
+                    empty_fields = data[0]
+                    message = data[1]
+                    success = data[2]
+
+                return render_template("create_garage.html", name = name, capacity = capacity, message = message, success = success)
             
             elif request.method == "GET":
                 return render_template("create_garage.html")
-    
-    except:
+    except KeyError:
         return render_template("error.html", message = "You have to be logged in to create a garage!")
+
 
 
 @app.route("/remove_garage/<int:garage_id>")
@@ -115,31 +130,38 @@ def garage(garage_id: int):
 
 @app.route("/add_car", methods = ["POST", "GET"])
 def add_car():
-    sql1 = text("SELECT id from users WHERE username=:username")
-    sql2 = text("select usergarages.id, garages.name, garages.capacity from users join usergarages on users.id = usergarages.user_id join garages on garages.id = usergarages.garage_id where users.id=:user_id")
-    user_id = db.session.execute(sql1, {"username":session["username"]}).fetchone()[0]
-    garages = db.session.execute(sql2, {"user_id":user_id}).fetchall()
-    if request.method == "GET":
-        return render_template("add_car.html", garages = garages)
-    
-    if request.method == "POST":
-        car_brand = request.form["carbrand"]
-        car_model = request.form["carmodel"]
-        prod_year = request.form["production_year"]
-        garage_id = request.form["garage_id"]
-        if prod_year != "" and garage_id != "":
-            data = add_car_(car_brand, car_model, int(prod_year), int(garage_id))
-            empty_fields = data[0]
-            message = data[1]
-            success = data[2]
-        else:
-            data = add_car_(car_brand, car_model, prod_year, garage_id)
-            empty_fields = data[0]
-            message = data[1]
-            success = data[2]
-            
-        return render_template("add_car.html", message = message, success = success, car_brand = car_brand, car_model = car_model, prod_year = prod_year, garages = garages)
+    try:
+        if session["username"]:
+            sql1 = text("SELECT id from users WHERE username=:username")
+            sql2 = text("select usergarages.id, garages.name, garages.capacity from users join usergarages on users.id = usergarages.user_id join garages on garages.id = usergarages.garage_id where users.id=:user_id")
+            user_id = db.session.execute(sql1, {"username":session["username"]}).fetchone()[0]
+            garages = db.session.execute(sql2, {"user_id":user_id}).fetchall()
 
+            if request.method == "GET":
+                return render_template("add_car.html", garages = garages)
+            
+            if request.method == "POST":
+                if session["csrf_token"] != request.form["csrf_token"]:
+                    abort(403)
+                car_brand = request.form["carbrand"]
+                car_model = request.form["carmodel"]
+                prod_year = request.form["production_year"]
+                garage_id = request.form["garage_id"]
+                if prod_year != "" and garage_id != "":
+                    data = add_car_(car_brand, car_model, int(prod_year), int(garage_id))
+                    empty_fields = data[0]
+                    message = data[1]
+                    success = data[2]
+                else:
+                    data = add_car_(car_brand, car_model, prod_year, garage_id)
+                    empty_fields = data[0]
+                    message = data[1]
+                    success = data[2]
+                    
+                return render_template("add_car.html", message = message, success = success, car_brand = car_brand, car_model = car_model, prod_year = prod_year, garages = garages, empty_fields = empty_fields)
+    except KeyError:
+        return render_template("error.html", message = "You have to be logged in to add cars!")
+    
 @app.route("/remove_car")
 def remove_car():
     garage_id = request.args.get("garage_id")

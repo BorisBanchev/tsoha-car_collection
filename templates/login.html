@@ -1,6 +1,8 @@
 {% extends "base.html"%} {% block content %}
 <br />
-<h1 style="text-align: center">Login to your account to view car collection</h1>
+<h1 style="text-align: center">
+  Login to your account to view car collection!
+</h1>
 <br />
 <br />
 <form action="/login" method="POST">
@@ -19,6 +21,7 @@
           id="exampleInputEmail1"
           name="username"
           placeholder="enter username:"
+          required
           {%
           if
           username
@@ -31,7 +34,6 @@
           endif
           %}
           style="width: 400px"
-          required
         />
       </div>
       <div class="mb-3">
@@ -47,8 +49,8 @@
           id="exampleInputPassword1"
           name="password"
           placeholder="enter password:"
-          style="width: 400px"
           required
+          style="width: 400px"
         />
       </div>
       <div class="sign-up-button">

@@ -10,17 +10,18 @@
             <div class = "signup-form" style="display: inline-block;">
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label" style="width: 400px; display: inline-block; text-align: left;">The name of the garage</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" name="garage_name" placeholder="enter name:" style="width: 400px;">
+                    <input type="text" class="form-control" id="exampleInputEmail1" name="garage_name" placeholder="enter name:" style="width: 400px;" required value="{% if message and not success and name != ''%} {{name}} {% endif %}">
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label" style="width: 400px; display: inline-block; text-align: left;">The capacity of the garage</label>
-                    <input type="number" class="form-control" id="quantity" name="capacity" required  placeholder="enter capacity (no more than 20):" style="width: 400px;">
+                    <input type="number" class="form-control" id="quantity" name="capacity"  placeholder="enter capacity (no more than 20):" style="width: 400px;" required value="{% if message and not success%} {{capacity}} {% endif %}">
                 </div>
                 <div class="sign-up-button">
                     <button type="submit" class="btn btn-secondary"> Create</button>
                 </div>
             </div>
         </div>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     </form>
     <br>
     {% if message %}

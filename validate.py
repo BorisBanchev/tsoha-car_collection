@@ -38,14 +38,14 @@ def create_account_valid(username: str, password: str, password2: str):
 
 
     if not user and 0 < len(username) <= 20 :
-        if password == password2 and 0 < len(password) <= 20:
+        if password == password2 and 8 <= len(password) <= 20:
             success = True
             message = "Account was created successfully!"
             data = empty_fields, message, success
             return  data
         
-        elif password == password2 and len(password) > 20:
-            message = "Password is too long!"
+        elif password == password2 and len(password) > 20 or len(password) < 8:
+            message = "Invalid password!"
             data = empty_fields, message, success
             return  data
             
@@ -54,10 +54,10 @@ def create_account_valid(username: str, password: str, password2: str):
             data = empty_fields, message, success
             return  data
 
-        elif len(username) > 20:
-            message = "Username is too long!"
-            data = empty_fields, message, success
-            return  data
+    elif len(username) > 20:
+        message = "Username is too long!"
+        data = empty_fields, message, success
+        return  data
     
 
 def login_to_account_valid(username: str, password: str):
@@ -120,35 +120,83 @@ def add_car_valid(brand: str, model: str, prod_year: int, garage_id: int ):
         empty_fields.append("garage option")
     
     if len(empty_fields) == 1:
-        empty_message = f"{empty_fields[0]} must be filled"
+        empty_message = f"{empty_fields[0]} must be filled!"
         data = empty_fields, empty_message, success
         return data
     
     elif len(empty_fields) > 1:
         for i in range(len(empty_fields)-1):
             empty_message += f"{empty_fields[i]}, "
-        empty_message += f"{empty_fields[-1]} must be filled"
+        empty_message += f"{empty_fields[-1]} must be filled!"
         data = empty_fields, empty_message, success
         return data
     
+
+    if cars_in_garage < capacity and int(prod_year) < 1886 or int(prod_year) > current_year + 1:
+        message = "Invalid production year!"
+        data = empty_fields, message, success
+        return data
+    
+    
+    if cars_in_garage >= capacity: 
+        message = "Garage is full!"
+        data = empty_fields, message, success
+        return data
+
+    if len(brand) > 20 or len(model) > 20:
+        message = "The brand or model of the car is too long!"
+        data = empty_fields, message, success
+        return data
 
     if cars_in_garage < capacity and 1886 <= int(prod_year) <= current_year + 1 and len(brand) > 0 and len(model) > 0:
         message = "Car added to garage!"
         success = True
         data = empty_fields, message, success
         return data
-    
 
-   
-    elif cars_in_garage < capacity and int(prod_year) < 1886 or int(prod_year) > current_year + 1:
-        message = "Invalid production year!"
-        data = empty_fields, message, success
+
+def create_garage_valid(name: str, capacity: int):
+    user_id = get_user_id()
+    sql_for_garage = text("SELECT name FROM garages WHERE name=:name")
+    garage = db.session.execute(sql_for_garage, {"name":name}).fetchone()
+    if garage:
+        garage = garage[0]
+    else: 
+        garage = ""
+    print(garage)
+    empty_fields = []
+    empty_message = ""
+    message = ""
+    success = False
+
+    if len(name) == 0:
+        empty_fields.append("name")
+    
+    if capacity == "":
+        empty_fields.append("capacity")
+    
+    if len(empty_fields) == 1:
+        empty_message = f"{empty_fields[0]} must be filled!"
+        data = empty_fields, empty_message, success
         return data
     
-    
-    elif cars_in_garage >= capacity: 
-        message = "Garage is full!"
+    if len(empty_fields) > 1:
+        empty_message = f"{empty_fields[0]} and {empty_fields[1]} must be filled!"
+        data = empty_fields, empty_message, success
+        return data
+
+    if capacity > 20 or capacity <= 0:
+        message = "Invalid capacity!"
         data = empty_fields, message, success
         return data
 
+    if len(name) > 30 or garage != "":
+        message = "Garaga name is too long or it has been already created!"
+        data = empty_fields, message, success
+        return data
 
+    if len(name) <= 30 and capacity <= 20 and garage == "":
+        success = True
+        message = "Garage created successfully!"
+        data = empty_fields, message, success
+        return data

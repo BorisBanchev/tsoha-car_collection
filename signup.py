@@ -14,6 +14,7 @@ def create_account(username: str, password: str, password2: str):
         db.session.execute(sql, {"username":username, "password":generate_password_hash(password) })
         db.session.commit()
         return valid
+    
     return valid
 
 

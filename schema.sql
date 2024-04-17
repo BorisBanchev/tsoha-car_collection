@@ -14,14 +14,14 @@ CREATE TABLE users (
 
 CREATE TABLE garages (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
+    name TEXT UNIQUE NOT NULL,
     capacity INTEGER NOT NULL
 );
 
 CREATE TABLE cars (
     id SERIAL PRIMARY KEY,
-    brand VARCHAR(50) NOT NULL,
-    model VARCHAR(50) NOT NULL,
+    brand TEXT NOT NULL,
+    model TEXT NOT NULL,
     prod_year INTEGER NOT NULL
 );  
 
