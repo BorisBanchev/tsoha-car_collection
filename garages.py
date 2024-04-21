@@ -19,30 +19,27 @@ def create_garage_(name: str, capacity: int):
         db.session.commit()
         return data
     return data
-    
-    
-    
 def remove_garage_(garage_id: int):
-    sql_remove_garage = text("DELETE from garages where garages.id=:garage_id")
-    sql_for_cars_in_garage = text("SELECT cars.id from cars join garagecars on cars.id = garagecars.car_id join garages on garages.id = garagecars.garage_id where garagecars.garage_id=:garage_id")
-    sql_to_remove_car = text("DELETE from cars where cars.id=:car_id")
-    cars = db.session.execute(sql_for_cars_in_garage, {"garage_id":garage_id}).fetchall()
+    sql1 = text("DELETE from garages where garages.id=:garage_id")
+    sql2 = text("""SELECT cars.id from cars join garagecars on cars.id = garagecars.car_id 
+                                  join garages on garages.id = garagecars.garage_id where garagecars.garage_id=:garage_id""")
+    sql3 = text("DELETE from cars where cars.id=:car_id")
+    cars = db.session.execute(sql2, {"garage_id":garage_id}).fetchall()
     for car_id in cars:
-        db.session.execute(sql_to_remove_car, {"car_id":car_id[0]})
+        db.session.execute(sql3, {"car_id":car_id[0]})
         db.session.commit()
 
-    db.session.execute(sql_remove_garage, {"garage_id":garage_id})
+    db.session.execute(sql1, {"garage_id":garage_id})
     db.session.commit()
-
 def open_garage(garage_id: int):
     sql1 = text("SELECT garages.name from garages where id=:garage_id")
-    sql2 = text("SELECT cars.id, cars.brand, cars.model, cars.prod_year from cars join garagecars on cars.id = garagecars.car_id join garages on garages.id = garagecars.garage_id where garagecars.garage_id=:garage_id")
+    sql2 = text("""SELECT cars.id, cars.brand, cars.model, cars.prod_year from cars join garagecars on cars.id = garagecars.car_id
+                 join garages on garages.id = garagecars.garage_id where garagecars.garage_id=:garage_id""")
     garage_name = db.session.execute(sql1, {"garage_id":garage_id}).fetchone()[0]
     cars = db.session.execute(sql2, {"garage_id":garage_id}).fetchall()
     return (garage_name, cars)
 
-
-
-
-
-    
+def cars_inside(garage_id: int):
+    sql = text("SELECT COALESCE(COUNT(*), 0) FROM garagecars WHERE garage_id =:garage_id")
+    cars = db.session.execute(sql, {"garage_id":garage_id}).fetchone()[0]
+    return cars

@@ -22,14 +22,16 @@
         <thead>
           <tr>
             <th scope="col">Name</th>
-            <th scope="col">Capacity</th>
+            <th scope="col">Cars inside</th>
+            <th scope="col">capacity of garage</th>
             <th scope="col">Open/Remove garage</th>
           </tr>
         </thead>
         <tbody>
-          {% for garage in garages %}
+           {% for garage, cars_in in zip(garages, cars) %}
           <tr>
             <td>{{garage.name}}</td>
+            <td>{{cars_in}}</td>
             <td>{{garage.capacity}}</td>
             <td class="buttons-column">
               <div class="buttons-container">
