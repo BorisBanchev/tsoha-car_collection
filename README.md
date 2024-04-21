@@ -11,6 +11,12 @@ Kirjautuneena käyttäjä voi hyödyntää seuraavia toimintoja:
 - Avata autotallin, jolloin näkee siinä olevat autot
 - Autotallin ollessa auki voi sinne lisätä autoja tai poistaa sieltä autoja
 
+# Sovelluksen nykyinen tilanne
+- Käyttäjä voi luoda tunnuksen ja kirjautua sisään sovellukseen
+- Sovellus ilmoittaa käyttäjälle virheellisistä syötteistä
+- Käyttäjä voi luoda autotallin ja poistaa autotallin kokoelmastaan
+- Käyttäjä voi lisätä auton valitsemaansa autotalliin
+- Autoja voi myös poistaa autotallista sen ollessa auki
 
 # Käynnistysohjeet
 Taustavaatimukset:
