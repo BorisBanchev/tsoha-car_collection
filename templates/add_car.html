@@ -41,8 +41,8 @@
           class="form-control"
           id="exampleInputPassword1"
           name="production_year"
-          placeholder="enter production year (more than 1885):"
           required
+          placeholder="enter production year (more than 1885):"
           value="{% if message == 'Invalid production year!' and not success %}{{prod_year}}{% elif message == 'Garage is full!' and not success %}{{prod_year}}{% elif 'production year' not in empty_fields and not success %}{{prod_year}}{% endif %}"
         />
       </div>
