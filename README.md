@@ -12,18 +12,24 @@ Kirjautuneena käyttäjä voi hyödyntää seuraavia toimintoja:
 - Autotallin ollessa auki voi sinne lisätä autoja tai poistaa sieltä autoja
 
 # Sovelluksen nykyinen tilanne
+
 - Käyttäjä voi luoda tunnuksen ja kirjautua sisään sovellukseen
 - Sovellus ilmoittaa käyttäjälle virheellisistä syötteistä
 - Käyttäjä voi luoda autotallin ja poistaa autotallin kokoelmastaan
 - Käyttäjä voi lisätä auton valitsemaansa autotalliin
 - Autoja voi myös poistaa autotallista sen ollessa auki
 
-# Käynnistysohjeet
+# Testaa sovellusta pilvessä
+
+Klikkaa avataksesi sovelluksen --> https://car-collection-app.fly.dev
+
+# Käynnistysohjeet (lokaalisesti)
+
 Taustavaatimukset:
+
 - python3 ladattuna
 - Pip (Python package manager)
-- PostgreSQL ladattuna ja serveri on auki, ohjeita tietokannan käynnistykseen täältä -->  https://github.com/hy-tsoha/local-pg
-
+- PostgreSQL ladattuna ja serveri on auki, ohjeita tietokannan käynnistykseen täältä --> https://github.com/hy-tsoha/local-pg
 
 Kloonaa repositorio omalle koneellesi
 
@@ -37,6 +43,7 @@ Luo .env ympäristö tiedosto seuraavilla muuttujilla:
 
 `DATABASE_URL=<tietokannan-paikallinen-osoite>`  
 `SECRET_KEY=<salainen-avain>`  
+`FLY_DEPLOYMENT=False`
 
 Käynnistä virtuaaliympäristö
 
@@ -53,12 +60,12 @@ Asenna sovelluksen riippuvuudet
 
 Jos PostreSQL-tietokanta asennettuna onnistuneesti koneelle serveri avataan ennen sovelluksen käynnistystä
 
-`start-pg.sh` 
+`start-pg.sh`
 
 Sovellus käyttää PostgreSQL-tietokantaa. Tietokannan skeema määritellään seuraavalla komennolla
 
-`psql < schema.sql`  
+`psql < schema.sql`
 
 Käynnistä sovellus
 
-`flask run`  
+`flask run`
