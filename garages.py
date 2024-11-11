@@ -43,3 +43,4 @@ def cars_inside(garage_id: int):
     sql = text("SELECT COALESCE(COUNT(*), 0) FROM garagecars WHERE garage_id =:garage_id")
     cars = db.session.execute(sql, {"garage_id":garage_id}).fetchone()[0]
     return cars
+

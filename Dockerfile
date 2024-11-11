@@ -8,9 +8,13 @@ LABEL fly_launch_runtime="flask"
 
 WORKDIR /code
 
+ENV DATABASE_URL="postgresql://user:secret@localhost:5432/mydatabasename"
+ENV SECRET_KEY=<salainen-avain>
+ENV FLY_DEPLOYMENT=False
+
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
-
+RUN pip install psycopg2-binary
 COPY . .
 
 EXPOSE 5000

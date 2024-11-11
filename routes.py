@@ -60,7 +60,7 @@ def login():
                 message="username or password must be filled!",
                 success=success,
                 username=None,
-            )
+            ) 
         elif success:
             session["username"] = username
             session["csrf_token"] = secrets.token_hex(16)
